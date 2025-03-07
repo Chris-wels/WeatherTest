@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<!--<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,5 +13,93 @@
 
 
 
+</body>
+</html>-->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Widget</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="weather-widget">
+        <input type="text" id="city-input" placeholder="Enter city name">
+        <button onclick="fetchWeather()">Get Weather</button>
+        <h2 id="location">Enter a city</h2>
+        <img id="weather-icon" src="" alt="Weather Icon">
+        <p id="temperature">--°C</p>
+        <p id="description">Fetching weather...</p>
+    </div>
+    
+    <script>
+        const API_KEY = 'd6e2eafdf527514e68f3d598dd0d046a'; // Replace with your OpenWeatherMap API key
+
+        async function fetchWeather() {
+            const city = document.getElementById('city-input').value;
+            if (!city) return;
+            const API_URL = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${API_KEY}`;
+
+            try {
+                const response = await fetch(API_URL);
+                const data = await response.json();
+                if (data.cod !== 200) {
+                    alert('City not found');
+                    return;
+                }
+                document.getElementById('location').textContent = data.name;
+                document.getElementById('temperature').textContent = `${Math.round(data.main.temp)}°C`;
+                document.getElementById('description').textContent = data.weather[0].description;
+                document.getElementById('weather-icon').src = `https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`;
+            } catch (error) {
+                console.error('Weather fetch error:', error);
+            }
+        }
+    </script>
+    
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(to right, #7a8081, #cbe7ef);
+            font-family: Arial, sans-serif;
+            flex-direction: column;
+        }
+
+        .weather-widget {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            border-radius: 15px;
+            color: white;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        input {
+            padding: 5px;
+            border: none;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        button {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 5px;
+            background: #2f80ed;
+            color: white;
+            cursor: pointer;
+        }
+
+        img {
+            width: 80px;
+        }
+
+        h2 {
+            margin: 0;
+        }
+    </style>
 </body>
 </html>
